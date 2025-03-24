@@ -1,4 +1,4 @@
-# Checklist Program ✅
+# Interactive Checklist ✅
 
 A simple Python-based **checklist application** that allows users to add, remove, check, uncheck items and simultaneously be able to see their checklist!
 
