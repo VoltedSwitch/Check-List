@@ -3,21 +3,16 @@ import json
 from typing import Any
 
 class FileHandler:
-    def __init__(self, file_path: str) -> None:
-        self.file_path: str = file_path
+    FILE_PATH = "checklist.json"
 
-    def load_json(self) -> dict[str, Any]:
-        if not os.path.exists(self.file_path):
-            return {}
-        with open(self.file_path, 'r') as file:
+    @staticmethod
+    def load_json() -> list[dict[str, Any]]:
+        if not os.path.exists(FileHandler.FILE_PATH):
+            return []
+        with open(FileHandler.FILE_PATH, 'r') as file:
             return json.load(file)
 
-    def save_json(self, data: dict[str, Any]) -> None:
-        with open(self.file_path, 'w') as file:
+    @staticmethod
+    def save_json(data: list[dict[str, Any]]) -> None:
+        with open(FileHandler.FILE_PATH, 'w') as file:
             json.dump(data, file, indent=4)
-
-    def insert_to_json(self, key: str, value: Any) -> None:
-        data: dict[str, Any] = self.load_json()
-        data[key] = value
-        self.save_json(data)
-
