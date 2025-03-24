@@ -61,9 +61,9 @@ class UserInterface:
             print("Your Checklist is currently empty!\n")
             return
     
-        print("Checklist:\n")
+        print("Checklist:")
         for index, thing in enumerate(self.checklist.things, start=1):
-            print(f"{index}. {thing}")
+            print(f"  {index}. {thing}")
         print()
     
     def checklist_interactions_menu(self) -> None:
@@ -83,7 +83,7 @@ class UserInterface:
             if user_input != "":
                 thing = Thing(user_input)
                 break
-            print("Please Enter a valid thing!\n")
+            print(f"{cc.RED}Please Enter a valid thing!{cc.END}\n")
         self.checklist.add_thing(thing)
     
     def get_valid_thing_number(self, mode_to_display: str=None) -> int:
@@ -96,7 +96,7 @@ class UserInterface:
             
             if self.checklist.is_valid_thing_number_str(user_input):
                 return int(user_input)
-            print("Invalid thing number\n")
+            print(f"{cc.RED}Invalid thing number{cc.END}\n")
 
     def remove_thing_interface(self) -> None:
         thing_number = self.get_valid_thing_number("Removal Mode")
@@ -113,20 +113,20 @@ class UserInterface:
         self.checklist.uncheck_thing(thing)
 
     def save_checklist_and_exit(self) -> None:
-        file_handler: FileHandler = FileHandler("checklist.json")
-        data: dict = {}
-        for thing in self.checklist.things:
-            data.update({"sentence": thing.sentence, "is_checked": thing.is_checked})
-        file_handler.save_json(data)
+        data: list = [
+            {"sentence": thing.sentence, "is_checked": thing.is_checked}
+            for thing in self.checklist.things
+        ]
+        FileHandler.save_json(data)
+        hide_cursor()
         print("Checklist saved successfully")
         time.sleep(2)
         clear_screen()
         exit()
 
     def load_checklist(self) -> None:
-        file_handler: FileHandler = FileHandler("checklist.json")
-        data = file_handler.load_json()
-        for thing_data in data.items():
+        data = FileHandler.load_json()
+        for thing_data in data:
             thing = Thing(thing_data["sentence"], thing_data["is_checked"])
             self.checklist.add_thing(thing)
 
@@ -148,7 +148,7 @@ def main() -> None:
         elif user_input == ui.SAVE_EXIT:
             ui.save_checklist_and_exit()
         else:
-            print("Invalid input\n")
+            print(f"{cc.RED}Invalid input{cc.END}\n")
 
 
 if __name__ == "__main__":
