@@ -41,6 +41,9 @@ class Checklist:
     def remove_thing(self, thing_number: int) -> None:
         self.things.pop(thing_number - 1)
 
+    def clear_checklist(self) -> None:
+        self.things.clear()
+
     def check_thing(self, thing: Thing) -> None:
         thing.check()
     
@@ -52,6 +55,7 @@ class UserInterface:
     ADD_THING = "a"
     INSERT_THING = "i"
     REMOVE_THING = "r"
+    CLEAR_CHECKLIST = "c"
     TOGGLE_CHECK = "t"
     SAVE_EXIT = "e"
 
@@ -73,6 +77,7 @@ class UserInterface:
         print(f"{self.ADD_THING}. Add thing")
         print(f"{self.INSERT_THING}. Insert thing")
         print(f"{self.REMOVE_THING}. Remove thing")
+        print(f"{self.CLEAR_CHECKLIST}. Clear checklist")
         print(f"{self.TOGGLE_CHECK}. Toggle Check")
         print(f"{self.SAVE_EXIT}. Save/Exit")
         return instant_input("\n> ")
@@ -128,6 +133,22 @@ class UserInterface:
                 return
             self.checklist.remove_thing(thing_number)
 
+    def clear_checklist_interface(self) -> None:
+        self.display_checklist()
+        user_input = input("Are you sure you want to clear the checklist? (y/n): ")
+        clear_screen()
+        hide_cursor()
+        if user_input.lower() == "y":
+            self.checklist.clear_checklist()
+            print("Checklist cleared successfully")
+            time.sleep(2)
+            clear_screen()
+        else:
+            print("Checklist was not cleared")
+            time.sleep(2)
+            clear_screen()
+        show_cursor()
+
     def toggle_check_thing_interface(self):
         while True:
             thing_number = self.get_valid_thing_number("Toggle Check Mode")
@@ -173,6 +194,11 @@ def main() -> None:
                 print(f"{cc.RED}You have nothing to remove!{cc.END}\n")
                 continue
             ui.remove_thing_interface()
+        elif user_input == ui.CLEAR_CHECKLIST:
+            if ui.checklist.things == []:
+                print(f"{cc.RED}You have nothing to clear!{cc.END}\n")
+                continue
+            ui.clear_checklist_interface()
         elif user_input == ui.TOGGLE_CHECK:
             if ui.checklist.things == []:
                 print(f"{cc.RED}You have nothing to check or uncheck!{cc.END}\n")
