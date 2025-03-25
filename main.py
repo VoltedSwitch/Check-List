@@ -29,6 +29,9 @@ class Checklist:
     def add_thing(self, thing: Thing) -> None:
         self.things.append(thing)
 
+    def insert_thing(self, thing: Thing, thing_number: int) -> None:
+        self.things.insert(thing_number - 1, thing)
+
     def is_valid_thing_number_str(self, thing_number: str) -> bool:
         if thing_number.isdigit():
             if 0 <= int(thing_number) - 1 < len(self.things):
@@ -47,6 +50,7 @@ class Checklist:
 
 class UserInterface:
     ADD_THING = "a"
+    INSERT_THING = "i"
     REMOVE_THING = "r"
     TOGGLE_CHECK = "t"
     SAVE_EXIT = "e"
@@ -67,6 +71,7 @@ class UserInterface:
     
     def checklist_interactions_menu(self) -> None:
         print(f"{self.ADD_THING}. Add thing")
+        print(f"{self.INSERT_THING}. Insert thing")
         print(f"{self.REMOVE_THING}. Remove thing")
         print(f"{self.TOGGLE_CHECK}. Toggle Check")
         print(f"{self.SAVE_EXIT}. Save/Exit")
@@ -85,13 +90,30 @@ class UserInterface:
                 self.checklist.add_thing(thing)
                 continue
             print(f"{cc.RED}Please Enter a valid thing!{cc.END}\n")
+
+    def insert_thing_interface(self) -> None:
+        while True:
+            thing_number = self.get_valid_thing_number("Insert Mode")
+            if not thing_number:
+                return
+            self.display_checklist()
+            print("Insert Mode\n")
+            user_input = input("Enter a thing (e to exit mode): ")
+            clear_screen()
+            if user_input.lower() == "e":
+                return
+            if user_input != "":
+                thing = Thing(user_input)
+                self.checklist.insert_thing(thing, thing_number)
+                continue
+            print(f"{cc.RED}Please Enter a valid thing!{cc.END}\n")
     
     def get_valid_thing_number(self, mode_to_display: str=None) -> int:
         while True:
             self.display_checklist()
             if mode_to_display is not None:
                 print(mode_to_display + "\n")
-            user_input: str = instant_input("Enter a thing number (e to exit mode): ").strip()
+            user_input: str = input("Enter a valid number from the checklist (e to exit mode): ").strip()
             clear_screen()
             if user_input.lower() == "e":
                 return False
@@ -144,6 +166,8 @@ def main() -> None:
         clear_screen()
         if user_input == ui.ADD_THING:
             ui.add_thing_interface()
+        elif user_input == ui.INSERT_THING:
+            ui.insert_thing_interface()
         elif user_input == ui.REMOVE_THING:
             if ui.checklist.things == []:
                 print(f"{cc.RED}You have nothing to remove!{cc.END}\n")
