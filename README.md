@@ -1,6 +1,6 @@
 # Interactive Checklist ✅  
 
-A simple Python-based checklist application that allows users to add, remove, check, uncheck, insert, and clear things while simultaneously viewing their checklist!  
+A simple Python-based checklist application that allows users to add, remove, check, uncheck, insert, and clear their checklist while simultaneously viewing their checklist!  
 
 ## Features ✨
 - Add things to the checklist
