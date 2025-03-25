@@ -48,8 +48,7 @@ class Checklist:
 class UserInterface:
     ADD_THING = "a"
     REMOVE_THING = "r"
-    CHECK_THING = "c"
-    UNCHECK_THING = "u"
+    TOGGLE_CHECK = "t"
     SAVE_EXIT = "e"
 
     def __init__(self) -> None:
@@ -69,8 +68,7 @@ class UserInterface:
     def checklist_interactions_menu(self) -> None:
         print(f"{self.ADD_THING}. Add thing")
         print(f"{self.REMOVE_THING}. Remove thing")
-        print(f"{self.CHECK_THING}. Check thing")
-        print(f"{self.UNCHECK_THING}. Uncheck thing")
+        print(f"{self.TOGGLE_CHECK}. Toggle Check")
         print(f"{self.SAVE_EXIT}. Save/Exit")
         return instant_input("\n> ")
 
@@ -78,39 +76,46 @@ class UserInterface:
         while True:
             self.display_checklist()
             print("Add Mode\n")
-            user_input = input("Enter a thing: ")
+            user_input = input("Enter a thing (e to exit mode): ")
             clear_screen()
+            if user_input.lower() == "e":
+                return
             if user_input != "":
                 thing = Thing(user_input)
-                break
+                self.checklist.add_thing(thing)
+                continue
             print(f"{cc.RED}Please Enter a valid thing!{cc.END}\n")
-        self.checklist.add_thing(thing)
     
     def get_valid_thing_number(self, mode_to_display: str=None) -> int:
         while True:
             self.display_checklist()
             if mode_to_display is not None:
                 print(mode_to_display + "\n")
-            user_input: str = input("Enter a thing number: ").strip()
+            user_input: str = instant_input("Enter a thing number (e to exit mode): ").strip()
             clear_screen()
-            
+            if user_input.lower() == "e":
+                return False
             if self.checklist.is_valid_thing_number_str(user_input):
                 return int(user_input)
             print(f"{cc.RED}Invalid thing number{cc.END}\n")
 
     def remove_thing_interface(self) -> None:
-        thing_number = self.get_valid_thing_number("Removal Mode")
-        self.checklist.remove_thing(thing_number)
+        while True:
+            thing_number = self.get_valid_thing_number("Removal Mode")
+            if not thing_number:
+                return
+            self.checklist.remove_thing(thing_number)
 
-    def check_thing_interface(self) -> None:
-        thing_number = self.get_valid_thing_number("Checking Mode")
-        thing = self.checklist.get_thing(thing_number)
-        self.checklist.check_thing(thing)
-
-    def uncheck_thing_interface(self) -> None:
-        thing_number = self.get_valid_thing_number("Unchecking Mode")
-        thing = self.checklist.get_thing(thing_number)
-        self.checklist.uncheck_thing(thing)
+    def toggle_check_thing_interface(self):
+        while True:
+            thing_number = self.get_valid_thing_number("Toggle Check Mode")
+            if not thing_number:
+                return
+            thing = self.checklist.get_thing(thing_number)
+            if thing.is_checked:
+                self.checklist.uncheck_thing(thing)
+            else:
+                self.checklist.check_thing(thing)
 
     def save_checklist_and_exit(self) -> None:
         data: list = [
@@ -140,15 +145,19 @@ def main() -> None:
         if user_input == ui.ADD_THING:
             ui.add_thing_interface()
         elif user_input == ui.REMOVE_THING:
+            if ui.checklist.things == []:
+                print(f"{cc.RED}You have nothing to remove!{cc.END}\n")
+                continue
             ui.remove_thing_interface()
-        elif user_input == ui.CHECK_THING:
-            ui.check_thing_interface()
-        elif user_input == ui.UNCHECK_THING:
-            ui.uncheck_thing_interface()
+        elif user_input == ui.TOGGLE_CHECK:
+            if ui.checklist.things == []:
+                print(f"{cc.RED}You have nothing to check or uncheck!{cc.END}\n")
+                continue
+            ui.toggle_check_thing_interface()
         elif user_input == ui.SAVE_EXIT:
             ui.save_checklist_and_exit()
         else:
-            print(f"{cc.RED}Invalid input{cc.END}\n")
+            print(f"{cc.RED}Invalid menu option!{cc.END}\n")
 
 
 if __name__ == "__main__":
