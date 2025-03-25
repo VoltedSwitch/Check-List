@@ -14,7 +14,12 @@ def show_cursor() -> None:
     print("\033[?25h")
 
 
-def instant_input(prompt=None, timeout=None, special_keys=None) -> str:
+def instant_input(
+    prompt: str | None = None, 
+    timeout: int | float | None = None, 
+    special_keys: dict[str, str] | None = None
+    ) -> str:
+    
     if prompt:
         print(prompt, end="", flush=True)
 
