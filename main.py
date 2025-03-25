@@ -67,10 +67,12 @@ class UserInterface:
         if self.checklist.things == []:
             print("Your Checklist is currently empty!\n")
             return
-    
+
+        width = len(str(len(self.checklist.things)))
+
         print("Checklist:")
         for index, thing in enumerate(self.checklist.things, start=1):
-            print(f"  {index}. {thing}")
+            print(f"  {index:>{width}}. {thing}")
         print()
     
     def checklist_interactions_menu(self) -> None:
