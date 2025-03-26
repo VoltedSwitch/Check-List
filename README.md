@@ -1,4 +1,4 @@
-# **Interactive Checklist ✅**  
+# **Interactive Checklists Manager ✅**  
 
 A **simple and efficient** Python-based checklist application that allows users to create and manage multiple checklists seamlessly. Add, remove, check, uncheck, and insert items while keeping a clear view of all your checklists!  
 
