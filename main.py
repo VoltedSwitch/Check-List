@@ -352,7 +352,7 @@ class UserInterface:
             data.append(checklist_data)
         FileHandler.save_json(data)
         hide_cursor()
-        print("Checklist saved successfully")
+        print("Progress saved successfully")
         time.sleep(2)
         clear_screen()
         exit()
