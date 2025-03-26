@@ -18,7 +18,7 @@ class Thing:
         self.is_checked: bool = False
 
     def __str__(self) -> str:
-        return f"{self.sentence} {'✅' if self.is_checked else ''}"
+        return f"{self.sentence} ✅" if self.is_checked else f"{self.sentence}"
 
 
 class Checklist:
@@ -50,6 +50,12 @@ class Checklist:
     def uncheck_thing(self, thing: Thing) -> None:
         thing.uncheck()
 
+    def _all_things_checked(self) -> bool:
+        return bool(self.things) and all(thing.is_checked for thing in self.things)
+    
+    def __str__(self) -> str:
+        return f"{self.name} ✅" if self._all_things_checked() else f"{self.name}"
+    
 
 class ChecklistsManager:
     def __init__(self) -> None:
@@ -94,7 +100,7 @@ class UserInterface:
     
     def display_checklist(self, checklist: Checklist) -> None:
         if not checklist.things:
-            print("Your Checklist is currently empty!\n")
+            print(f"Checklist '{checklist}' is currently empty!\n")
             return
 
         width = len(str(len(checklist.things)))
@@ -113,7 +119,7 @@ class UserInterface:
         
         print("All Your Checklists:")
         for index, checklist in enumerate(self.checklists_manager.user_checklists, start=1):
-            print(f"  {index:>{width}}. {checklist.name}")
+            print(f"  {index:>{width}}. {checklist}")
         print()
 
     def main_menu(self) -> str:
