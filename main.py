@@ -1,5 +1,5 @@
 from checklist_core.user_interface import UserInterface
-from utils.utilities import clear_screen
+from utils.utility_funcs import clear_screen
 
 def main() -> None:
     ui: UserInterface = UserInterface()

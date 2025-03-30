@@ -25,4 +25,4 @@ class Colors:
     CROSSED = "\033[9m"
     END = "\033[0m"
 
-cc = Colors()
+c = Colors()

@@ -5,7 +5,7 @@ from .checklist_manager import ChecklistsManager
 from .checklist import Checklist
 from .thing import Thing
 from utils.file_handler import FileHandler
-from utils.utilities import clear_screen, hide_cursor, show_cursor
+from utils.utility_funcs import clear_screen, hide_cursor, show_cursor
 import utils.colors as c
 
 class UserInterface:
