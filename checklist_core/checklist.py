@@ -11,16 +11,22 @@ class Checklist:
     def add_thing(self, thing: Thing) -> None:
         self.things.append(thing)
 
-    def insert_thing(self, thing: Thing, thing_number: int) -> None:
+    def insert_thing(self, thing_number: int, thing: Thing) -> None:
         self.things.insert(thing_number - 1, thing)
 
     def rename_thing(self, thing_number: int, new_sentence: str) -> None:
         self.get_thing(thing_number).sentence = new_sentence
 
+    def reposition_thing(self, thing_number: int, insertion_position: int) -> None:
+        thing: Thing = self.remove_thing(thing_number, return_removed_thing=True)
+        self.insert_thing(insertion_position, thing)
+
     def is_valid_thing_number_str(self, thing_number: str) -> bool:
         return thing_number.isdigit() and 0 <= int(thing_number) - 1 < len(self.things)
 
-    def remove_thing(self, thing_number: int) -> None:
+    def remove_thing(self, thing_number: int, return_removed_thing: bool=False) -> None | Thing:
+        if return_removed_thing:
+            return self.things.pop(thing_number - 1)
         self.things.pop(thing_number - 1)
 
     def clear_checklist(self) -> None:
