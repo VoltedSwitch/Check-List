@@ -12,6 +12,7 @@ class UserInterface:
     CREATE_NEW_CHECKLIST = "n"
     INSERT_NEW_CHECKLIST = "k"
     RENAME_CHECKLIST = "h"
+    REPOSITION_CHECKLIST = "w"
     DELETE_CHECKLIST = "d"
     DELETE_ALL_CHECKLISTS = "l"
     SAVE_EXIT = "s"
@@ -19,22 +20,24 @@ class UserInterface:
     ADD_THING = "a"
     INSERT_THING = "i"
     RENAME_THING = "m"
+    REPOSITION_THING = "g"
     REMOVE_THING = "r"
     CLEAR_CHECKLIST = "c"
     TOGGLE_CHECK = "t"
     EXIT = "e"
 
     def __init__(self) -> None:
-        self.checklists_manager = ChecklistsManager()
+        self.checklists_manager: ChecklistsManager = ChecklistsManager()
         self.load_checklist()
 
     def main_menu(self) -> str:
-        print(f"{self.CREATE_NEW_CHECKLIST}. Create a new checklist")
-        print(f"{self.INSERT_NEW_CHECKLIST}. Insert a new checklist")
-        print(f"{self.RENAME_CHECKLIST}. Rename a checklist")
+        print(f"{self.CREATE_NEW_CHECKLIST}. Create new checklist")
+        print(f"{self.INSERT_NEW_CHECKLIST}. Insert new checklist")
+        print(f"{self.RENAME_CHECKLIST}. Rename checklist")
+        print(f"{self.REPOSITION_CHECKLIST}. reposition checklist")
         print(f"{self.DELETE_CHECKLIST}. Delete an exisiting checklist")
         print(f"{self.DELETE_ALL_CHECKLISTS}. Delete ALL existing checklists")
-        print("-- OR choose a checklist number to open an existing checklist")
+        print("#. OR choose a checklist number to open an existing checklist")
         print(f"{self.SAVE_EXIT}. Save/Exit")
         return input("\n> ").strip()
     
@@ -57,6 +60,11 @@ class UserInterface:
                     print(f"{c.RED}You have no checklist to rename!{c.END}\n")
                     continue
                 self.rename_checklist_interface()
+            elif user_input == self.REPOSITION_CHECKLIST:
+                if not self.checklists_manager.user_checklists:
+                    print(f"{c.RED}You have no checklists to reposition!{c.END}\n")
+                    continue
+                self.reposition_checklist_interface()
             elif user_input == self.DELETE_CHECKLIST:
                 if not self.checklists_manager.user_checklists:
                     print(f"{c.RED}You have no checklists to remove!{c.END}\n")
@@ -76,6 +84,7 @@ class UserInterface:
         print(f"{self.ADD_THING}. Add thing")
         print(f"{self.INSERT_THING}. Insert thing")
         print(f"{self.RENAME_THING}. Rename thing")
+        print(f"{self.REPOSITION_THING}. Reposition thing")
         print(f"{self.REMOVE_THING}. Remove thing")
         print(f"{self.CLEAR_CHECKLIST}. Clear checklist")
         print(f"{self.TOGGLE_CHECK}. Toggle Check")
@@ -101,6 +110,11 @@ class UserInterface:
                     print(f"{c.RED}There is no thing to rename!{c.END}\n")
                     continue
                 self.rename_thing_interface(checklist)
+            elif user_input == self.REPOSITION_THING:
+                if not checklist.things:
+                    print(f"{c.RED}There is no thing to reposition!{c.END}\n")
+                    continue
+                self.reposition_thing_interface(checklist)
             elif user_input == self.REMOVE_THING:
                 if not checklist.things:
                     print(f"{c.RED}You have no things to remove!{c.END}\n")
@@ -177,12 +191,14 @@ class UserInterface:
             while True:
                 self.display_checklist_names()
                 print("Checklist Insertion Mode\n")
-                name: str = input(f"Enter the name of your new checklist to insert at #{checklist_number} (e to exit mode): ").strip()
+                name: str = input(
+                    f"Enter the name of your new checklist to insert at #{checklist_number} (e to exit mode): "
+                ).strip()
                 clear_screen()
                 if name.lower() == "e":
                     return
                 elif name:
-                    self.checklists_manager.insert_checklist(Checklist(name), checklist_number)
+                    self.checklists_manager.insert_checklist(checklist_number, Checklist(name))
                     break
                 print(f"{c.RED}Please enter a valid name!{c.END}\n")
 
@@ -199,7 +215,7 @@ class UserInterface:
                 if thing.lower() == "e":
                     return
                 elif thing:
-                    checklist.insert_thing(Thing(thing), thing_number)
+                    checklist.insert_thing(thing_number, Thing(thing))
                     break
                 print(f"{c.RED}Please enter a valid thing!{c.END}\n")
 
@@ -236,6 +252,39 @@ class UserInterface:
                     checklist.rename_thing(thing_number, new_name)
                     break
                 print(f"{c.RED}Please enter a valid name!{c.END}\n")
+
+    def reposition_checklist_interface(self):
+        while True:
+            checklist_number: int | None = self.get_valid_checklist_number("Checklist Repositioning Mode")
+            if not checklist_number:
+                return
+            while True:
+                new_position_number: int | None = self.get_valid_checklist_number(
+                    "Checklist Repositioning Mode",
+                    f"Enter a valid checklist number to reposition checklist #{checklist_number} to (e to exit mode): "
+                )
+                if not new_position_number:
+                    return
+                elif new_position_number:
+                    self.checklists_manager.reposition_checklist(checklist_number, new_position_number)
+                    break
+    
+    def reposition_thing_interface(self, checklist: Checklist):
+        while True:
+            thing_number: int | None = self.get_valid_thing_number(checklist, "Thing Repositioning Mode")
+            if not thing_number:
+                return
+            while True:
+                new_position_number: int | None = self.get_valid_thing_number(
+                    checklist,
+                    "Thing Repositioning Mode",
+                    f"Enter a valid thing number to reposition thing #{thing_number} to (e to exit mode): "
+                )
+                if not new_position_number:
+                    return
+                elif new_position_number:
+                    checklist.reposition_thing(thing_number, new_position_number)
+                    break
 
     def remove_checklist_interface(self) -> None:
         while True:
@@ -296,12 +345,16 @@ class UserInterface:
             else:
                 checklist.check_thing(thing)
 
-    def get_valid_checklist_number(self, mode_to_display: str=None) -> int | None:
+    def get_valid_checklist_number(self, mode_to_display: str | None=None, custom_sentence: str | None=None) -> int | None:
         while True:
             self.display_checklist_names()
-            if mode_to_display is not None:
+            if mode_to_display:
                 print(mode_to_display + "\n")
-            user_input: str = input("Enter a valid checklist number (e to exit mode): ").strip()
+            user_input: str = input(
+                "Enter a valid checklist number (e to exit mode): "
+                if custom_sentence is None 
+                else custom_sentence
+            ).strip()
             clear_screen()
             if user_input.lower() == "e":
                 return None
@@ -309,12 +362,16 @@ class UserInterface:
                 return int(user_input)
             print(f"{c.RED}Invalid checklist number{c.END}\n")
     
-    def get_valid_thing_number(self, checklist: Checklist, mode_to_display: str=None) -> int | None:
+    def get_valid_thing_number(self, checklist: Checklist, mode_to_display: str | None=None, custom_sentence: str | None=None) -> int | None:
         while True:
             self.display_checklist(checklist)
-            if mode_to_display is not None:
+            if mode_to_display:
                 print(mode_to_display + "\n")
-            user_input: str = input("Enter a valid number from the checklist (e to exit mode): ").strip()
+            user_input: str = input(
+                "Enter a valid number from the checklist (e to exit mode): "
+                if custom_sentence is None
+                else custom_sentence
+            ).strip()
             clear_screen()
             if user_input.lower() == "e":
                 return None
