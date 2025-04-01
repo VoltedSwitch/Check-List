@@ -34,7 +34,7 @@ class UserInterface:
         print(f"{self.CREATE_NEW_CHECKLIST}. Create new checklist")
         print(f"{self.INSERT_NEW_CHECKLIST}. Insert new checklist")
         print(f"{self.RENAME_CHECKLIST}. Rename checklist")
-        print(f"{self.REPOSITION_CHECKLIST}. reposition checklist")
+        print(f"{self.REPOSITION_CHECKLIST}. Reposition checklist")
         print(f"{self.DELETE_CHECKLIST}. Delete an exisiting checklist")
         print(f"{self.DELETE_ALL_CHECKLISTS}. Delete ALL existing checklists")
         print("#. OR choose a checklist number to open an existing checklist")
