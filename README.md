@@ -4,7 +4,8 @@ A **simple and efficient** Python-based checklist application that allows users 
 
 ## **Features ✨**  
 ✔ **Create** and manage multiple checklists  
-✔ **Rename** checklists and things for better organization  
+✔ **Rename** checklists and things for better organization
+✔ **Reposition** checklists and things for better organization
 ✔ **Add** new things to any checklist  
 ✔ **Insert** things or checklists at a specific position  
 ✔ **Remove** things, entire checklists, or **all checklists at once**  
