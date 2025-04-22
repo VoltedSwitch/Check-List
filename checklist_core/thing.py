@@ -1,5 +1,5 @@
 class Thing:
-    def __init__(self, sentence: str, is_checked: bool=False) -> None:
+    def __init__(self, sentence: str, is_checked: bool = False) -> None:
         self.sentence: str = sentence
         self.is_checked: bool = is_checked
 
