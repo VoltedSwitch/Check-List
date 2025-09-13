@@ -10,4 +10,4 @@ class Thing:
         self.is_checked: bool = False
 
     def __str__(self) -> str:
-        return f"{self.sentence} ✅" if self.is_checked else f"{self.sentence}"
+        return f"{self.sentence} ✅" if self.is_checked else self.sentence
