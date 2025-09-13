@@ -385,7 +385,7 @@ class UserInterface:
                 checklist.check_item(item)
 
     def get_valid_checklist_number(
-        self, mode_to_display: str | None = None, custom_sentence: str | None = None
+        self, mode_to_display: str | None = None, custom_text: str | None = None
     ) -> int | None:
         while True:
             self.display_checklist_names()
@@ -393,8 +393,8 @@ class UserInterface:
                 print(mode_to_display + "\n")
             user_input: str = input(
                 "Enter a valid checklist number (e to exit mode): "
-                if custom_sentence is None
-                else custom_sentence
+                if custom_text is None
+                else custom_text
             ).strip()
             clear_screen()
             if user_input.lower() == "e":
@@ -407,7 +407,7 @@ class UserInterface:
         self,
         checklist: Checklist,
         mode_to_display: str | None = None,
-        custom_sentence: str | None = None,
+        custom_text: str | None = None,
     ) -> int | None:
         while True:
             self.display_checklist(checklist)
@@ -415,8 +415,8 @@ class UserInterface:
                 print(mode_to_display + "\n")
             user_input: str = input(
                 "Enter a valid number from the checklist (e to exit mode): "
-                if custom_sentence is None
-                else custom_sentence
+                if custom_text is None
+                else custom_text
             ).strip()
             clear_screen()
             if user_input.lower() == "e":
@@ -431,7 +431,7 @@ class UserInterface:
             checklist_data: dict[str, Any] = {
                 "name": checklist.name,
                 "items": [
-                    {"sentence": item.text, "is_checked": item.checked}
+                    {"text": item.text, "checked": item.checked}
                     for item in checklist.items
                 ],
             }
@@ -448,6 +448,6 @@ class UserInterface:
         for checklist_data in data:
             checklist: Checklist = Checklist(checklist_data["name"])
             for item_data in checklist_data["items"]:
-                item: Item = Item(item_data["sentence"], item_data["is_checked"])
+                item: Item = Item(item_data["text"], item_data["checked"])
                 checklist.add_item(item)
             self.checklists_manager.add_checklist(checklist)
