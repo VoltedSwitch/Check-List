@@ -1,4 +1,4 @@
-class Thing:
+class Item:
     def __init__(self, text: str, checked: bool = False) -> None:
         self.text: str = text
         self.checked: bool = checked

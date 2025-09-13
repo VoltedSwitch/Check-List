@@ -1,48 +1,48 @@
-from .thing import Thing
+from .item import Item
 
 
 class Checklist:
     def __init__(self, name: str) -> None:
         self.name: str = name
-        self.things: list[Thing] = []
+        self.items: list[Item] = []
 
-    def get_thing(self, thing_number: int) -> Thing:
-        return self.things[thing_number - 1]
+    def get_item(self, item_number: int) -> Item:
+        return self.items[item_number - 1]
 
-    def add_thing(self, thing: Thing) -> None:
-        self.things.append(thing)
+    def add_item(self, item: Item) -> None:
+        self.items.append(item)
 
-    def insert_thing(self, thing_number: int, thing: Thing) -> None:
-        self.things.insert(thing_number - 1, thing)
+    def insert_item(self, item_number: int, item: Item) -> None:
+        self.items.insert(item_number - 1, item)
 
-    def rename_thing(self, thing_number: int, new_sentence: str) -> None:
-        self.get_thing(thing_number).text = new_sentence
+    def rename_item(self, item_number: int, new_text: str) -> None:
+        self.get_item(item_number).text = new_text
 
-    def reposition_thing(self, thing_number: int, insertion_position: int) -> None:
-        thing: Thing = self.remove_thing(thing_number, return_removed_thing=True)
-        self.insert_thing(insertion_position, thing)
+    def reposition_item(self, item_number: int, insertion_position: int) -> None:
+        item: Item = self.remove_item(item_number, return_removed_item=True)
+        self.insert_item(insertion_position, item)
 
-    def is_valid_thing_number_str(self, thing_number: str) -> bool:
-        return thing_number.isdigit() and 0 <= int(thing_number) - 1 < len(self.things)
+    def is_valid_item_number_str(self, item_number: str) -> bool:
+        return item_number.isdigit() and 0 <= int(item_number) - 1 < len(self.items)
 
-    def remove_thing(
-        self, thing_number: int, return_removed_thing: bool = False
-    ) -> None | Thing:
-        if return_removed_thing:
-            return self.things.pop(thing_number - 1)
-        self.things.pop(thing_number - 1)
+    def remove_item(
+        self, item_number: int, return_removed_item: bool = False
+    ) -> None | Item:
+        if return_removed_item:
+            return self.items.pop(item_number - 1)
+        self.items.pop(item_number - 1)
 
     def clear_checklist(self) -> None:
-        self.things.clear()
+        self.items.clear()
 
-    def check_thing(self, thing: Thing) -> None:
-        thing.check()
+    def check_item(self, item: Item) -> None:
+        item.check()
 
-    def uncheck_thing(self, thing: Thing) -> None:
-        thing.uncheck()
+    def uncheck_item(self, item: Item) -> None:
+        item.uncheck()
 
-    def _all_things_checked(self) -> bool:
-        return bool(self.things) and all(thing.checked for thing in self.things)
+    def _all_items_checked(self) -> bool:
+        return bool(self.items) and all(item.checked for item in self.items)
 
     def __str__(self) -> str:
-        return f"{self.name} ✅" if self._all_things_checked() else f"{self.name}"
+        return f"{self.name} ✅" if self._all_items_checked() else f"{self.name}"
