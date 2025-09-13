@@ -379,7 +379,7 @@ class UserInterface:
             if not thing_number:
                 return
             thing = checklist.get_thing(thing_number)
-            if thing.is_checked:
+            if thing.checked:
                 checklist.uncheck_thing(thing)
             else:
                 checklist.check_thing(thing)
@@ -431,7 +431,7 @@ class UserInterface:
             checklist_data: dict[str, Any] = {
                 "name": checklist.name,
                 "things": [
-                    {"sentence": thing.sentence, "is_checked": thing.is_checked}
+                    {"sentence": thing.text, "is_checked": thing.checked}
                     for thing in checklist.things
                 ],
             }

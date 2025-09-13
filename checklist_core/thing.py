@@ -1,13 +1,13 @@
 class Thing:
-    def __init__(self, sentence: str, is_checked: bool = False) -> None:
-        self.sentence: str = sentence
-        self.is_checked: bool = is_checked
+    def __init__(self, text: str, checked: bool = False) -> None:
+        self.text: str = text
+        self.checked: bool = checked
 
     def check(self) -> None:
-        self.is_checked: bool = True
+        self.checked: bool = True
 
     def uncheck(self) -> None:
-        self.is_checked: bool = False
+        self.checked: bool = False
 
     def __str__(self) -> str:
-        return f"{self.sentence} ✅" if self.is_checked else self.sentence
+        return f"{self.text} ✅" if self.checked else self.text

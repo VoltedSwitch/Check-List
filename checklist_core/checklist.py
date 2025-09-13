@@ -16,7 +16,7 @@ class Checklist:
         self.things.insert(thing_number - 1, thing)
 
     def rename_thing(self, thing_number: int, new_sentence: str) -> None:
-        self.get_thing(thing_number).sentence = new_sentence
+        self.get_thing(thing_number).text = new_sentence
 
     def reposition_thing(self, thing_number: int, insertion_position: int) -> None:
         thing: Thing = self.remove_thing(thing_number, return_removed_thing=True)
@@ -42,7 +42,7 @@ class Checklist:
         thing.uncheck()
 
     def _all_things_checked(self) -> bool:
-        return bool(self.things) and all(thing.is_checked for thing in self.things)
+        return bool(self.things) and all(thing.checked for thing in self.things)
 
     def __str__(self) -> str:
         return f"{self.name} ✅" if self._all_things_checked() else f"{self.name}"
