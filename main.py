@@ -1,4 +1,4 @@
-from checklist_core.user_interface import UserInterface
+from core.user_interface import UserInterface
 from utils.utility_funcs import clear_screen
 
 
